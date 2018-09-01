@@ -16,16 +16,17 @@
 //version: tur
 //ciber 
 //parabola 
-//232
+//304
 using namespace std;
 double pi = 3.1415926;
 //------------------------ICMF cluster parameter--------------------------------------------
+double b2 = 2 * 2; // \mu G, in yuanq = 3, in 1406.5972 =1.  I use 2 
 double kl = 0.2; //kpc^{-1}//1406 is 0.18, yuanqiang is 0.1 pi. I use 0.2 
 double kh = 2 * pi ;//                  3.14,      4   pi.       2 * pi
 int nk = ceil(20 * (3 + log10(kh / kl)));// =log10(kh / kmin);
-double b2 = 2 * 2; // \mu G, in yuanq = 3, in 1406.5972 =1.  I use 2 
+
 double q = -11./3;
-//----------------------------H2356-309------------------------------------------------------
+//----------------------------PKS 2155-304------------------------------------------------------
 double enef[] = {0.171, 0.4955, 1.4353, 4.1575, 12.0425, 34.882, 84.7717, 101.0379, 115.5527, 137.7252, 164.1522, 197.6806, 240.5282, 255.9009, 289.6566, 348.8196, 420.0668, 465.7592, 511.1168, 615.5136, 741.2337, 839.0094, 1120.282, 1693.1660, 3211.637};
 //double obsf1[] = {1.7393, 0.3692, 0.4125,  0.7499, 1.664 , 1.821, 1.577, 1.424, 1.212, 0.975, 0.478, 0.629, 0.359, 0.214, 0.391, 0.396, 0.455, 0.402 };
 //vector<double> obsf(obsf1, obsf1+18);
@@ -34,14 +35,23 @@ double enef[] = {0.171, 0.4955, 1.4353, 4.1575, 12.0425, 34.882, 84.7717, 101.03
 //double depth[] = {1,      1,     1,    1,                 0.996,      0.79047, 0.597848, 0.365852, 0.1688,       0.0585, 0.01777, 0.0056,       0.00213, 0.001, 0.0007459, 0.000668, 0.00071497, 0.000826938 } ;// !!!!in this ciber depth, chi2 is almost 20 in the no axion. so I change it.
 //ciber0305
 double depth[] = {0, 0, 0, 0, 3.80244e-05, 0.00222202, 0.0155311, 0.0225639, 0.0303441, 0.0454049, 0.0706268, 0.127019, 0.247873, 0.303405, 0.445013, 0.741779, 1.11812, 1.3329, 1.51827, 1.85186, 2.12762, 2.27873, 2.53497, 2.70882, 2.77346     
-
+//direction
 double l =  17.74 * pi / 180, b =  -52.25 * pi / 180;
+//datapoint numbers
+double na = 25;//data points
+//cluster
+		  
+//MW 
 double bx = 4.6, seita0 = 49 * pi /180, rxc = 4.8, rx = 2.9;
 double h_disk = 0.4, w_disk = 0.27;
 double bn = 1.4,  bs = -1.1, z0 =5.3, wh = 0.2, rn = 9.22, rs =17 ;//rs>16.7
-double r0 = 8.5, nw = 400;//nw: MW domains
-double na = 25;//data points
-int n2 = 5;//20*20
+double r0 = 8.5.
+
+//nw: MW domains
+int nw = 400;
+
+//precedure
+int n2 = 5;//5*20
 
 double fq(double q1, double kn){
 	if (kn < kl) kn = kl;
@@ -264,10 +274,9 @@ double pa(double g_agamma, double ma, int i, vector<double> fai, vector<vector<d
     T123 = V * T123 *V.conjugate();
     matrix T12 = T121 + T122 + T123; 
     T11 =T12 * T11;
-//    if(j%100 ==0) cout<<T11<<endl;
     }
 //------------------------------------------------EBL-----------------------------------------------------
-double tau1 = exp(log(depth[i]) /2);
+double tau1 = exp(- depth[i]/2);//new change!!!
 vector <complex<double>> t31 ={
     tau1, 0, 0, 0, tau1, 0, 0, 0, 1
 };
