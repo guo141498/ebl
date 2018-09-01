@@ -1,6 +1,6 @@
 #!/usr/bin/env ruby
 #---------------update
-system("g++ -std=c++11 nlopt_turm_mwmix_309_probability.cc matrix.cc -O2 -o 3.out ")
+system("g++ -std=c++11 nlopt_turm_mwmix_304_probability.cc matrix.cc -O2 -o 3.out ")
 require '~/.scripts/pool.rb'
 def f(i)
 	system("echo #{i}")
