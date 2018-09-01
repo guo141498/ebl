@@ -35,7 +35,7 @@ double kl = 0.2; //kpc^{-1}//1406 is 0.18, yuanqiang is 0.1 pi. I use 0.2
 double kh = 2 * pi ;//                  3.14,      4   pi.       2 * pi
 double q = -11./3;
 double eta = 1;
-double rmax = 300;//kpc 
+double rmax_c = 300;//kpc 
 int nk = ceil(20 * (3 + log10(kh / kl)));// =log10(kh / kmin);
 	  
 //----------------------------MW------------------------------------------------------------------------------ 
@@ -207,11 +207,11 @@ double psi(double r2, double z2, double smax){
     return acos((pow(b31, 2) + pow(b32, 2) - pow(b33, 2)) / (2 * b31 *b32));      
 }
 //----------------------------------------pa-----------------------------------
-int ns = kh * rmax;
+int ns = kh * rmax_c;
 double pa(double g_agamma, double ma, int i, vector<double> fai, vector<vector<double>> bran1, vector<vector<double>> bran2, vector<vector<double>> bran3, vector<vector<double>> bran4){
     double fai0 = 0;
-    double s3 = 1./2 * rmax / ns; 
-    double x3 = rmax / ns;
+    double s3 = 1./2 * rmax_c / ns; 
+    double x3 = rmax_c / ns;
     double n1 = nr(s3) * 1e6 * 1. / (5.05e12) * 1. / (5.05e15) * 3e19;// 1/ Mev * 1 / Gev * kpc  units: kpc^{-1}
     double t1 = - 4 * pi * 1./ 137 * n1 / enef[i];//u1 = delta_pl
     double u1 = t1;  
@@ -246,7 +246,7 @@ double pa(double g_agamma, double ma, int i, vector<double> fai, vector<vector<d
 	 vector<double> bran22 = bran2[j];
 	 vector<double> bran33 = bran3[j];
 	 vector<double> bran44 = bran4[j];
-    v1 = g_agamma / 1e-11 * br(s3, bran11, bran22, bran33, bran44) * 1.52e-2 * pow(1 + s3 /rc, -1);
+    v1 = g_agamma / 1e-11 * br(s3, bran11, bran22, bran33, bran44) * 1.52e-2 * pow(1 + s3 /rc, -eta);
 //    cout<<"j= "<<j<<" "<<br(s3, bran11, bran22, bran33, bran44)<<endl;
     d1 = sqrt(pow(s1 - u1, 2) + 4 * pow(v1, 2));
     lambda4 = t1;
