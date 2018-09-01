@@ -381,7 +381,7 @@ vector<vector<vector<double>>> bran11, bran22, bran33, bran44;
 	 }
     for(int j3 = 0; j3 < n2; j3++){
         for(int j = 0; j < ns; j++){
-		  for(int k = 0; k < bo +1; k++){
+		  for(int k = 0; k < nk +1; k++){
             srand(time(NULL));
             bran11[j3][j][k] = (double) rand() / RAND_MAX;  
             bran22[j3][j][k] = (double) rand() / RAND_MAX;  
