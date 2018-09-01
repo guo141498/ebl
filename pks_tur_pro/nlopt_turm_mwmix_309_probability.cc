@@ -1,5 +1,3 @@
-//compiler ...source/object files... -lnlopt -lm -o myprogram
-//created time: Thu May 17 14:18:45 +08 2018
 #include<iostream>
 #include<vector>
 #include<nlopt.hpp>
@@ -16,37 +14,35 @@
 //version: tur
 //ciber 
 //parabola 
-//304
 using namespace std;
 double pi = 3.1415926;
-//------------------------ICMF cluster parameter--------------------------------------------
-double b2 = 2 * 2; // \mu G, in yuanq = 3, in 1406.5972 =1.  I use 2 
-double kl = 0.2; //kpc^{-1}//1406 is 0.18, yuanqiang is 0.1 pi. I use 0.2 
-double kh = 2 * pi ;//                  3.14,      4   pi.       2 * pi
-int nk = ceil(20 * (3 + log10(kh / kl)));// =log10(kh / kmin);
 
-double q = -11./3;
 //----------------------------PKS 2155-304------------------------------------------------------
 double enef[] = {0.171, 0.4955, 1.4353, 4.1575, 12.0425, 34.882, 84.7717, 101.0379, 115.5527, 137.7252, 164.1522, 197.6806, 240.5282, 255.9009, 289.6566, 348.8196, 420.0668, 465.7592, 511.1168, 615.5136, 741.2337, 839.0094, 1120.282, 1693.1660, 3211.637};
 //double obsf1[] = {1.7393, 0.3692, 0.4125,  0.7499, 1.664 , 1.821, 1.577, 1.424, 1.212, 0.975, 0.478, 0.629, 0.359, 0.214, 0.391, 0.396, 0.455, 0.402 };
 //vector<double> obsf(obsf1, obsf1+18);
-//double sigmaf[] = {0.9534, 0.5693, 0.726772, 1.38225, 2.93654, 0.636, 0.42, 0.333, 0.28,    0.222, 0.183, 0.199, 0.199, 0.153, 0.218, 0.19, 0.208, 0.258};
-//double depth[] = {1 , 1 , 1, 1, 0.997,  0.793,  0.696, 0.58 ,0.455, 0.336, 0.2358, 0.1612, 0.111, 0.079, 0.059437, 0.047, 0.038, 0.0306};//Gilmore
-//double depth[] = {1,      1,     1,    1,                 0.996,      0.79047, 0.597848, 0.365852, 0.1688,       0.0585, 0.01777, 0.0056,       0.00213, 0.001, 0.0007459, 0.000668, 0.00071497, 0.000826938 } ;// !!!!in this ciber depth, chi2 is almost 20 in the no axion. so I change it.
-//ciber0305
-double depth[] = {0, 0, 0, 0, 3.80244e-05, 0.00222202, 0.0155311, 0.0225639, 0.0303441, 0.0454049, 0.0706268, 0.127019, 0.247873, 0.303405, 0.445013, 0.741779, 1.11812, 1.3329, 1.51827, 1.85186, 2.12762, 2.27873, 2.53497, 2.70882, 2.77346     
+//double sigmaf[] = {0.9534, 0.5693, 0.726772, 1.3822599, 0.153, 0.218, 0.19, 0.208, 0.258};
+//ciber
+double depth[] = {0, 0, 0, 0, 3.80244e-05, 0.00222202, 0.0155311, 0.0225639, 0.0303441, 0.0454049, 0.0706268, 0.127019, 0.247873, 0.303405, 0.445013, 0.741779, 1.11812, 1.3329, 1.51827, 1.85186, 2.12762, 2.27873, 2.53497, 2.70882, 2.77346};     
 //direction
 double l =  17.74 * pi / 180, b =  -52.25 * pi / 180;
 //datapoint numbers
 double na = 25;//data points
-//cluster
-		  
-//MW 
+
+//------------------------ICMF cluster parameter--------------------------------------------
+double b2 = 2 * 2; // \mu G, in yuanq = 3, in 1406.5972 =1.  I use 2 
+double kl = 0.2; //kpc^{-1}//1406 is 0.18, yuanqiang is 0.1 pi. I use 0.2 
+double kh = 2 * pi ;//                  3.14,      4   pi.       2 * pi
+double q = -11./3;
+double eta = 1;
+double rmax = 300;//kpc 
+int nk = ceil(20 * (3 + log10(kh / kl)));// =log10(kh / kmin);
+	  
+//----------------------------MW------------------------------------------------------------------------------ 
 double bx = 4.6, seita0 = 49 * pi /180, rxc = 4.8, rx = 2.9;
 double h_disk = 0.4, w_disk = 0.27;
 double bn = 1.4,  bs = -1.1, z0 =5.3, wh = 0.2, rn = 9.22, rs =17 ;//rs>16.7
-double r0 = 8.5.
-
+double r0 = 8.5;
 //nw: MW domains
 int nw = 400;
 
@@ -70,12 +66,11 @@ double epsilon(double kn){
 } 
 
 double  bx3(double x3, vector<double> bran1, vector<double> bran2){
-//    function<double(const double)> cos;
-//    dpds(const function<double(const double)>& cos)
 double bx31 = 0;     
-for (double n = 1; n < nk + 0.5; n++ ){
-double kn = kl * 1e-3 * pow( kh / (1e-3 * kl), n / nk);
-double dkn = kn -  kl * 1e-3 * pow( kh / (1e-3 * kl), (n-1) / nk);
+for (int n = 1; n < nk + 0.5; n++ ){
+double n_1 = n;
+double kn = kl * 1e-3 * pow( kh / (1e-3 * kl), n_1 / nk);
+double dkn = kn -  kl * 1e-3 * pow( kh / (1e-3 * kl), (n_1 - 1) / nk);
     bx31 += pow(2 * epsilon(kn) * dkn * log(1. / bran1[n] ) / pi, 1./2 ) * cos(kn * x3 + 2 * pi * bran2[n]);
 //cout<<"bx31= "<< bx31 <<endl;
 }
@@ -94,29 +89,29 @@ double br(const double x3, vector<double> bran1, vector<double> bran2, vector<do
 }
 
 double seita ( double s2) {//seita(s)
-                           double r2 = sqrt(s2 * s2 * cos(b) * cos(b) + r0 * r0 - 2 * r0 * s2 * cos(b) * cos(l));
-                           if (0 < l < pi / 2 || - pi / 2 < l < 0 ) {
-                               if (s2 * cos(b) * cos(l) > r0) {
-                                   return pi - asin(s2 * cos(b) * sin(l) / r2);
-                               }
-                               else {
-                                   return asin(s2 * cos(b) *  sin(l) / r2);
-                               }
-                           }
-                           else {
-                               return asin(s2 * cos(b) *  sin(l) / r2); 
-                           }
-                          }
+    double r2 = sqrt(s2 * s2 * cos(b) * cos(b) + r0 * r0 - 2 * r0 * s2 * cos(b) * cos(l));
+    if (0 < l < pi / 2 || - pi / 2 < l < 0 ) {
+    if (s2 * cos(b) * cos(l) > r0) {
+        return pi - asin(s2 * cos(b) * sin(l) / r2);
+    }
+    else {
+        return asin(s2 * cos(b) *  sin(l) / r2);
+        }
+    }
+    else{
+        return asin(s2 * cos(b) *  sin(l) / r2); 
+        }
+    }
 double b_disk(double r2, double z2){//MW_disk
-                                    double bdisk1;
-                                    if (r2 < 3) 
-                                    bdisk1 = 0 ;
-                                    else if (r2 >= 3 && r2 <5) 
-                                    bdisk1 = 0.1 ;
-                                    else  
-                                    bdisk1 = 5 * 0.1 / r2;
-                                    double bdisk = bdisk1 * (1 - pow(1 + exp(-2 * (abs(z2) - h_disk) /w_disk ), -1));
-                                    return bdisk;
+    double bdisk1;
+    if (r2 < 3) 
+        bdisk1 = 0 ;
+    else if (r2 >= 3 && r2 <5) 
+        bdisk1 = 0.1 ;
+    else  
+        bdisk1 = 5 * 0.1 / r2;
+    double bdisk = bdisk1 * (1 - pow(1 + exp(-2 * (abs(z2) - h_disk) /w_disk ), -1));
+        return bdisk;
                                    }
 double b_diskr (double r2, double z2){
     if (r2 >= 3 && r2 <5 ) return 0;
@@ -133,6 +128,7 @@ double b_halo(double r2, double z2){
     else
     return exp(-abs(z2) / z0 ) * pow(1 +exp(-2 * (abs(z2) - h_disk) /w_disk ), -1) * bs * (1 - pow(1 + exp(-2 * (abs(r2) - rs) /wh ), -1));//azimuthal = b_haloa
 }
+
 double oop(double r2, double z2){
     if(r2 > 4.8)	{
         double rp = r2 - abs(z2) / tan(seita0);
@@ -195,9 +191,9 @@ double b_x (double r2, double z2) {// bx(s)
                                   }
 
 double b_y (double r2, double z2) {// by(s)
-                                   double s2 = z2 / sin(b);
-                                   return b_r(r2, z2) * cos(seita(s2)) - b_a(r2, z2) * sin (seita(s2));
-                                  }
+    double s2 = z2 / sin(b);
+    return b_r(r2, z2) * cos(seita(s2)) - b_a(r2, z2) * sin (seita(s2));
+    }
 double bpre (double r2, double z2) {
     return sqrt(pow(b_x(r2, z2), 2) + pow(b_y(r2, z2), 2) + pow(b_z(r2, z2), 2) - pow((b_x(r2, z2) * sin(l) * cos(b) - b_y(r2, z2) * cos(l) * cos(b) + b_z(r2, z2) * sin(b)) ,2));
 }//r_core = 10 kpc , r_max = 300 kpc;
@@ -211,11 +207,11 @@ double psi(double r2, double z2, double smax){
     return acos((pow(b31, 2) + pow(b32, 2) - pow(b33, 2)) / (2 * b31 *b32));      
 }
 //----------------------------------------pa-----------------------------------
-int ns = kh * 300;
+int ns = kh * rmax;
 double pa(double g_agamma, double ma, int i, vector<double> fai, vector<vector<double>> bran1, vector<vector<double>> bran2, vector<vector<double>> bran3, vector<vector<double>> bran4){
     double fai0 = 0;
-    double s3 = 1./2 * 300 / ns; 
-    double x3 = 300. / ns;
+    double s3 = 1./2 * rmax / ns; 
+    double x3 = rmax / ns;
     double n1 = nr(s3) * 1e6 * 1. / (5.05e12) * 1. / (5.05e15) * 3e19;// 1/ Mev * 1 / Gev * kpc  units: kpc^{-1}
     double t1 = - 4 * pi * 1./ 137 * n1 / enef[i];//u1 = delta_pl
     double u1 = t1;  
@@ -224,7 +220,7 @@ double pa(double g_agamma, double ma, int i, vector<double> fai, vector<vector<d
 	vector<double> bran33 = bran3[0];
 	vector<double> bran44 = bran4[0];
     double rc = 100;
-    double v1 = g_agamma / 1e-11 * br(s3, bran11, bran22, bran33, bran44) * 1.52e-2 * pow(1 + s3 / rc, -1 );
+    double v1 = g_agamma / 1e-11 * br(s3, bran11, bran22, bran33, bran44) * 1.52e-2 * pow(1 + s3 / rc, -eta );
     double s1 = - pow(ma / 1e-9, 2) /  enef[i] * 7.8e-2  ;//kpc^{-1}
     double d1 = sqrt(pow(s1 - u1, 2) + 4 * pow(v1, 2));
     double lambda4 = t1;
@@ -385,7 +381,7 @@ vector<vector<vector<double>>> bran11, bran22, bran33, bran44;
 	 }
     for(int j3 = 0; j3 < n2; j3++){
         for(int j = 0; j < ns; j++){
-		  for(int k = 0; k < nk +1; k++){
+		  for(int k = 0; k < bo +1; k++){
             srand(time(NULL));
             bran11[j3][j][k] = (double) rand() / RAND_MAX;  
             bran22[j3][j][k] = (double) rand() / RAND_MAX;  
@@ -406,9 +402,9 @@ double p1;
             vector<vector<double>> bran2 = bran22[j4]; 
             vector<vector<double>> bran3 = bran33[j4]; 
             vector<vector<double>> bran4 = bran44[j4]; 
-                for(int i1= 0; i1 < na; i1++){
-                    p1 = pa(g_agamma, ma, i1, fai1, bran1, bran2, bran3, bran4);
-                    cout <<p1<<" ";
+            for(int i1= 0; i1 < na; i1++){
+                 p1 = pa(g_agamma, ma, i1, fai1, bran1, bran2, bran3, bran4);
+                 cout <<p1<<" ";
 //                    pp[j7][j4][i1] = 1;
 //                    cout<<j7<<" "<<j4<<" "<<i1<<endl;
                 }
